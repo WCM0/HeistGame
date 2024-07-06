@@ -15,6 +15,8 @@ public class Car : MonoBehaviour
     private Rigidbody _rigidbody;
     private Wheel[] wheels;
 
+   
+
 
     // Start is called before the first frame update
     void Start()
@@ -40,5 +42,9 @@ public class Car : MonoBehaviour
             wheel.Torque = Throttle * motorTorque;
 
         }
+
+       
+     
+
     }
 }
