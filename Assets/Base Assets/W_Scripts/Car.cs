@@ -8,6 +8,7 @@ public class Car : MonoBehaviour
     public Transform centerOfMass;
     public float motorTorque = 1500f;
     public float maxSteer = 30f;
+    public bool carActive;
 
     public float Steer { get; set; }
     public float Throttle { get; set; }
@@ -24,27 +25,23 @@ public class Car : MonoBehaviour
         wheels = GetComponentsInChildren<Wheel>();
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.centerOfMass = centerOfMass.localPosition;
-
-
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        Steer = GameManager.Instance.InputController.SteerInput;
-        Throttle = GameManager.Instance.InputController.ThrottleInput;
-
-        foreach (var wheel in wheels)
+        if(carActive == true)
         {
+            Steer = GameManager.Instance.InputController.SteerInput;
+            Throttle = GameManager.Instance.InputController.ThrottleInput;
 
-            wheel.SteerAngle = Steer * maxSteer;
-            wheel.Torque = Throttle * motorTorque;
+            foreach (var wheel in wheels)
+            {
 
+                wheel.SteerAngle = Steer * maxSteer;
+                wheel.Torque = Throttle * motorTorque;
+
+            }
         }
-
-       
-     
-
     }
 }
