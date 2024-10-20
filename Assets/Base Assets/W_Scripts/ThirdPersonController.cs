@@ -3,136 +3,77 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+[RequireComponent(typeof(CharacterController))]
 public class ThirdPersonController : MonoBehaviour
 {
-    public float walkSpeed = 2f;
-    public float runSpeed = 6f;
-    public float turnSpeed = 10f;
-    public float jumpForce = 5f;
-    public float crouchSpeed = 1f;
+    [Header("Movement Settings")]
+    public float moveSpeed = 5f;
+    public float turnSmoothTime = 0.1f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 2f;
 
-    public CinemachineVirtualCamera virtualCamera;
-    public float cameraDistance = 5f;
-    public float cameraHeight = 2f;
-
-    // Mouse look variables
-    public float mouseSensitivity = 100f;
-    private float xRotation = 0f; // Vertical rotation (pitch)
-    private float yRotation = 0f; // Horizontal rotation (yaw)
+    [Header("Camera Settings")]
+    public CinemachineFreeLook cinemachineCamera;
+    public Transform cameraTarget;
 
     private CharacterController controller;
-    private Vector3 playerVelocity;
-    private bool groundedPlayer;
-    private Transform cameraTransform;
-
-    private float gravityValue = -9.81f;
-    private Animator animator;
-    private bool isRunning = false;
-    private bool isCrouching = false;
+    private Transform cam;
+    private Vector3 velocity;
+    private float turnSmoothVelocity;
 
     private void Start()
     {
         controller = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        cameraTransform = Camera.main.transform;
-
-        // Lock the cursor to the center of the screen
         Cursor.lockState = CursorLockMode.Locked;
 
-        if (virtualCamera == null)
+        if (Camera.main != null)
         {
-            Debug.LogError("There's no Camera assigned to the ThirdPersonController.");
-            return;
+            cam = Camera.main.transform;
         }
 
-        virtualCamera.Follow = this.transform;
-        virtualCamera.LookAt = this.transform;
-
-        CinemachineTransposer transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
-        if (transposer != null)
+        if (cinemachineCamera != null)
         {
-            transposer.m_FollowOffset = new Vector3(0, cameraHeight, -cameraDistance);
+            cinemachineCamera.Follow = cameraTarget;
+            cinemachineCamera.LookAt = cameraTarget;
         }
     }
 
-    void Update()
+    private void Update()
     {
-        Movement();
-        Jumping();
-        Crouching();
-        MouseLook();
-        UpdateAnimations();
+        MovePlayer();
+        ApplyGravity();
     }
 
-    void Movement()
+    private void MovePlayer()
     {
-        groundedPlayer = controller.isGrounded;
-        if (groundedPlayer && playerVelocity.y < 0)
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+
+        if (direction.magnitude >= 0.1f)
         {
-            playerVelocity.y = 0f;
-        }
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        move = cameraTransform.forward * move.z + cameraTransform.right * move.x;
-        move.y = 0f;
-
-        isRunning = Input.GetKey(KeyCode.LeftShift);
-        float currentSpeed = isRunning ? runSpeed : (isCrouching ? crouchSpeed : walkSpeed);
-
-        controller.Move(move * Time.deltaTime * currentSpeed);
-
-        if (move != Vector3.zero)
-        {
-            gameObject.transform.forward = Vector3.Slerp(gameObject.transform.forward, move, Time.deltaTime * turnSpeed);
-        }
-
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
-    }
-
-    void Jumping()
-    {
-        if (Input.GetButtonDown("Jump") && groundedPlayer && !isCrouching)
-        {
-            playerVelocity.y += Mathf.Sqrt(jumpForce * -3.0f * gravityValue);
-            animator.SetTrigger("Jump");
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            controller.Move(moveDir.normalized * moveSpeed * Time.deltaTime);
         }
     }
 
-    void Crouching()
+    private void ApplyGravity()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (controller.isGrounded && velocity.y < 0)
         {
-            isCrouching = !isCrouching;
-            animator.SetBool("Crouch", isCrouching);
-
-            controller.height = isCrouching ? 1f : 2f;
-            controller.center = new Vector3(0, controller.height / 2f, 0);
+            velocity.y = -2f;
         }
-    }
 
-    void MouseLook()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (Input.GetButtonDown("Jump") && controller.isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
 
-        // Horizontal rotation (yaw): Rotate the player around the Y axis
-        yRotation += mouseX;
-        transform.localRotation = Quaternion.Euler(0f, yRotation, 0f);
-
-        // Vertical rotation (pitch): Rotate the camera around the X axis
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Limit pitch to avoid camera flip
-        cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-    }
-
-    void UpdateAnimations()
-    {
-        Vector3 horizontalMovement = new Vector3(controller.velocity.x, 0, controller.velocity.z);
-        float movementMagnitude = horizontalMovement.magnitude;
-
-        animator.SetFloat("Speed", movementMagnitude);
-        animator.SetBool("IsRunning", isRunning);
-        animator.SetBool("IsGrounded", groundedPlayer);
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }
