@@ -9,6 +9,7 @@ public class Car : MonoBehaviour
     public float motorTorque = 1500f;
     public float maxSteer = 30f;
     public bool carActive;
+    public float accelRate = 2.0f;
 
     public float Steer { get; set; }
     public float Throttle { get; set; }
@@ -39,7 +40,7 @@ public class Car : MonoBehaviour
             {
 
                 wheel.SteerAngle = Steer * maxSteer;
-                wheel.Torque = Throttle * motorTorque;
+                wheel.Torque = Throttle * accelRate * motorTorque;
 
             }
         }
