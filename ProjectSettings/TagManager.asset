@@ -8,6 +8,7 @@ TagManager:
   - Position01
   - Position02
   - Position03
+  - RobberyTarget
   layers:
   - Default
   - TransparentFX
