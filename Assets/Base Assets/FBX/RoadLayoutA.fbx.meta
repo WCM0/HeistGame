@@ -3,7 +3,72 @@ guid: 17da199251ea475469ee2766041218c8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BuildingMat01
+    second: {fileID: 2100000, guid: e84613b251f23614f96a5819b7da6c65, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GroundGrassMat01
+    second: {fileID: 2100000, guid: 05a5a036d7abedf47a4627fb94b8c109, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Location02_PalmTreeLeavesMat
+    second: {fileID: 2100000, guid: 89efa320a4750504b83dd7920f27b58a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Location02_StoneGrey_Mat
+    second: {fileID: 2100000, guid: 443356b585e913e41a37752316819a0f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Location02_TreeBrownMat
+    second: {fileID: 2100000, guid: 94cf6fd52678da1458b85074892c897a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Location02_TreeGreenMat
+    second: {fileID: 2100000, guid: 370f114e29759b84d962292f49c839a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: LocationsHighlightMat01
+    second: {fileID: 2100000, guid: 2ab2280d5807d1d43bd2e81f42a4f405, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PavementCementMat01
+    second: {fileID: 2100000, guid: d5bb5622110628b488eba360f20804f4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RoadMat01
+    second: {fileID: 2100000, guid: 59d2b5ea0bde836488110cce6d40a140, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert3
+    second: {fileID: 2100000, guid: 3735aaa8ca251374ea868d9fbf18e654, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: standardSurface1
+    second: {fileID: 2100000, guid: f1748bf91759ebc43aedd5335f249cdd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: textMatBlack01
+    second: {fileID: 2100000, guid: a74a5fa74585c2d41ab29798d4d66b6e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: typeStandardSurface
+    second: {fileID: 2100000, guid: 2071546a2ca4f3c4093d668ea939cac7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

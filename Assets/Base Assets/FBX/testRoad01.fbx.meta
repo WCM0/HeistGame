@@ -3,7 +3,27 @@ guid: 1d2a706a54a9f8f418546f7131500873
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: PavementCementMat01
+    second: {fileID: 2100000, guid: e611862a90f752c48bde47bc7e0243ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RoadMat01
+    second: {fileID: 2100000, guid: 3ab521c4b6ffc48499e93c761c959f2b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert3
+    second: {fileID: 2100000, guid: cd593a0b1b0aac446a7d8b1bde876686, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: standardSurface1
+    second: {fileID: 2100000, guid: f361887790928fb47ad80db5595b7cf0, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
