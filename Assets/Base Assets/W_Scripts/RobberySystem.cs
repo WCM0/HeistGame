@@ -4,72 +4,40 @@ using UnityEngine;
 
 public class RobberySystem : MonoBehaviour
 {
-    [System.Serializable]
-    public class RobberyTarget
-    {
-        public string targetName;
-        public int lootAmount;
-        public float robberyTime;  // Directly customize time for each location
-        public bool isRobbed = false;
-        public bool ableToRob;
-        public Collider targetCollider;
-    }
+    public float rewardAmount = 100.0f; // Amount of money the player earns when entering
+    [SerializeField] private bool isRobbed = false; // Track if this target has been robbed
 
-    public List<RobberyTarget> robberyTargets;  // List of places to rob
-    [SerializeField] private RobberyTarget currentTarget;
-    public bool isRobbing = false;
-
-    private void Start()
-    {
-        if (robberyTargets.Count > 0)
-        {
-            Debug.Log("Robbery system ready. Enter the area to start robbing.");
-        }
-        else
-        {
-            Debug.LogError("No robbery targets available.");
-        }
-    }
+    public Car carController;
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Something entered: " + other.gameObject.name);  // Log to see if anything is detected
+        Debug.Log("Trigger entered by: " + other.name);
 
-        if (isRobbing) return;
-
-        foreach (var target in robberyTargets)
+        if (other.CompareTag("Player"))
         {
-            if (other == target.targetCollider && !target.isRobbed)
+            Debug.Log("Player entered the robbery area: " + gameObject.name);
+            carController = other.GetComponent<Car>();
+
+            if (carController != null && !isRobbed)
             {
-                Debug.Log("Target detected: " + target.targetName);
-                currentTarget = target;
-                StartRobbery(currentTarget);
-                break;
+                carController.AddMoney(rewardAmount); // Add money to player
+                isRobbed = true; // Mark this target as robbed
+                Debug.Log("Awarded $" + rewardAmount + " to the player.");
+                gameObject.SetActive(false); // Disable the target after robbing
+            }
+            else if (isRobbed)
+            {
+                Debug.Log("This target has already been robbed.");
+            }
+            else
+            {
+                Debug.LogError("PlayerController not found on Player GameObject.");
             }
         }
-    }
-
-    private void StartRobbery(RobberyTarget target)
-    {
-        if (isRobbing)
+        else
         {
-            Debug.Log("Already robbing a location.");
-            return;
+            Debug.Log("Non-player object entered the robbery area: " + other.name);
         }
-
-        isRobbing = true;
-        Debug.Log("Robbing: " + target.targetName + " | Robbery Time: " + target.robberyTime + "s");
-        StartCoroutine(PerformRobbery(target, target.robberyTime));
-    }
-
-    private IEnumerator PerformRobbery(RobberyTarget target, float robberyTime)
-    {
-        yield return new WaitForSeconds(robberyTime);
-
-        target.isRobbed = true;
-        Debug.Log("Successfully robbed " + target.targetName + "! Loot collected: " + target.lootAmount);
-
-        isRobbing = false;
     }
 }
 
