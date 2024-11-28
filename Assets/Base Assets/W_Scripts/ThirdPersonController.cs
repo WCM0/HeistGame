@@ -10,7 +10,7 @@ public class ThirdPersonController : MonoBehaviour
     public float moveSpeed = 5f;
     public float turnSmoothTime = 0.1f;
     public float gravity = -9.81f;
-    public float jumpHeight = 2f;
+    public float jumpHeight = 2.0f;
 
     [Header("Camera Settings")]
     public CinemachineFreeLook cinemachineCamera;
@@ -20,6 +20,8 @@ public class ThirdPersonController : MonoBehaviour
     private Transform cam;
     private Vector3 velocity;
     private float turnSmoothVelocity;
+
+    public Animator animator;
 
     private void Start()
     {

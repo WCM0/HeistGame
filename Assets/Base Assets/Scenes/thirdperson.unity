@@ -2269,6 +2269,7 @@ MonoBehaviour:
   jumpHeight: 2
   cinemachineCamera: {fileID: 0}
   cameraTarget: {fileID: 0}
+  animator: {fileID: 5866666021275300313}
 --- !u!143 &5866666021275300315
 CharacterController:
   m_ObjectHideFlags: 0
