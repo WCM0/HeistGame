@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Car : MonoBehaviour
+{
+
+    public Transform centerOfMass;
+    public float motorTorque = 1500f;
+    public float maxSteer = 30f;
+    public bool carActive;
+    public float accelRate = 2.0f;
+
+    public float Steer { get; set; }
+    public float Throttle { get; set; }
+
+    private Rigidbody _rigidbody;
+    private Wheel[] wheels;
+
+   
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        wheels = GetComponentsInChildren<Wheel>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.centerOfMass = centerOfMass.localPosition;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(carActive == true)
+        {
+            Steer = GameManager.Instance.InputController.SteerInput;
+            Throttle = GameManager.Instance.InputController.ThrottleInput;
+
+            foreach (var wheel in wheels)
+            {
+
+                wheel.SteerAngle = Steer * maxSteer;
+                wheel.Torque = Throttle * accelRate * motorTorque;
+
+            }
+        }
+    }
+}
